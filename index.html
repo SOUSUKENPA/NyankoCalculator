@@ -1,11 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>にゃんこダメージ計算</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
 <h1>にゃんこ大戦争 ダメージ計算</h1>
 
 <h3>味方キャラ</h3>
 
 <select id="myCat">
     <option value="bahamut">覚醒のネコムート</option>
-    <option value="macho">ネコモヒカン</option>
+    
 </select>
+
 <h3>レベル</h3>
 
 <input
@@ -13,9 +27,7 @@
     type="number"
     value="30"
     min="1"
->
-Lv
-
+>Lv
 
 <h3>敵キャラ</h3>
 
@@ -23,6 +35,7 @@ Lv
     <option value="kuro">クロサワ監督</option>
     <option value="bunbun">ぶんぶん先生</option>
 </select>
+
 <h3>敵倍率</h3>
 
 <input
@@ -30,12 +43,25 @@ Lv
     type="number"
     value="100"
     min="1"
->
-%
-<h4><button id="calc">
+>%
+
+<h4>
+<button id="calc">
 計算
-</button></h4>
+</button>
+</h4>
 
 <h5>結果</h5>
 
 <p id="result"></p>
+
+<script src="data/search_data1_ja.js"></script>
+<script src="data/unit_formal.js"></script>
+
+<script src="jdb.js"></script>
+<script src="damage.js"></script>
+<script src="script.js"></script>
+
+</body>
+
+</html>
