@@ -150,3 +150,25 @@ function getStatus(cat, level){
     };
 
 }
+function loadCatList() {
+
+    const select = document.getElementById("myCat");
+
+    select.innerHTML = "";
+
+    for (const unit of unit_data1_ja) {
+
+        const form = unit.forms.find(f => f.valid);
+
+        if (!form) continue;
+
+        const option = document.createElement("option");
+
+        option.value = form.name;
+        option.textContent = form.name;
+
+        select.appendChild(option);
+    }
+}
+
+loadCatList();
