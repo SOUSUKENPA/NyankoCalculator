@@ -22,3 +22,18 @@ function getCatData(name) {
 
     return null;
 }
+function getCatStatus(name) {
+    const form = getCatData(name);
+
+    if (!form) {
+        return null;
+    }
+
+    return {
+        name: form.name,
+        hpBase: form.data[0],
+        attackBase: form.data[3],
+        range: form.data[5],
+        freq: form.freq
+    };
+}
