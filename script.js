@@ -87,6 +87,9 @@ button.addEventListener("click", function(){
     const catChoice =
     document.getElementById("myCat").value;
 
+const jdbCat = getCatData(catChoice);
+console.log("計算に使うJDBデータ:", jdbCat);
+
     const enemyChoice =
     document.getElementById("enemy").value;
 const level =
