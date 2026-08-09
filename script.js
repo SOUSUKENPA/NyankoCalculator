@@ -150,8 +150,3 @@ function getStatus(cat, level){
     };
 
 }
-function getCatData(name){
-
-    console.log("検索:", name);
-
-}
