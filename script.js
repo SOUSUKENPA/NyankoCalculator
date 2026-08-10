@@ -169,7 +169,7 @@ button.addEventListener("click", function () {
         createCatFromJDB(jdbCat, level);
 
     console.log("計算用キャラ:", myCat);
-
+　　console.log("① 敵を取得します");
 
     // ==========================
     // 敵取得
@@ -177,7 +177,7 @@ button.addEventListener("click", function () {
 
     const enemy =
         enemies[enemyChoice];
-
+　　console.log("② 敵:", enemy);
 
     // ==========================
     // 敵倍率
@@ -196,9 +196,11 @@ button.addEventListener("click", function () {
 
     const damage =
         calculateDamage(myCat);
+　　console.log("③ ダメージ:", damage);
 
     const hit =
         Math.ceil(enemyHp / damage);
+    console.log("④ 撃破必要回数:", hit);
 
     const survive =
         calculateSurvive(myCat, enemyAtk);
