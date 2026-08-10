@@ -1,174 +1,260 @@
-// 味方データ
-const cats = {
-    bahamut:{
-        id: "bahamut",
-        name:"覚醒のネコムート",
-        hp:25500,
-        atk:81600,
-        dps:23000,
-        range:200,
-        kb:5,
-        attackFrequency:2.2,
-        traits:{
-    blast:true,
-}
-}
-};
+// ==============================
 // 敵データ
+// ==============================
+
 const enemies = {
 
-    kuro:{
-        name:"クロサワ監督",
-        hp:1200000,
-        atk:72000,
-        traits:{
-            black:true
+    kuro: {
+        name: "クロサワ監督",
+        hp: 1200000,
+        atk: 72000,
+        traits: {
+            black: true
         }
     },
 
-    bunbun:{
-        name:"ぶんぶん先生",
-        hp:999999,
-        atk:30000,
-        traits:{
-            floating:true
+    bunbun: {
+        name: "ぶんぶん先生",
+        hp: 999999,
+        atk: 30000,
+        traits: {
+            floating: true
         }
     }
 
 };
 
 
-// 攻撃回数計算
-function calculateDamage(cat){
+// ==============================
+// JDBからキャラデータを取得
+// ==============================
+
+function createCatFromJDB(jdbCat, level) {
+
+    if (!jdbCat) {
+        return null;
+    }
+
+    // JDBの生データ
+    const data = jdbCat.data;
+
+    // 今は確認できている値を使用
+    const hpBase = data[0];
+    const atkBase = data[3];
+    const range = data[5];
+
+    // レベルによる仮計算
+    const hp = hpBase * level / 30;
+    const atk = atkBase * level / 30;
+
+    return {
+        name: jdbCat.name,
+        hp: hp,
+        atk: atk,
+        range: range,
+        freq: jdbCat.freq,
+
+        // 今は既存計算との互換用
+        attackFrequency: jdbCat.freq / 42,
+        traits: {}
+    };
+}
+
+
+// ==============================
+// 攻撃ダメージ
+// ==============================
+
+function calculateDamage(cat) {
 
     let damage = cat.atk;
 
-    if(cat.traits.blast){
-
+    if (cat.traits && cat.traits.blast) {
         damage += cat.atk;
-
     }
 
     return damage;
-
 }
-function calculateHit(cat, enemyHp){
 
-    return Math.ceil(enemyHp / cat.atk);
 
+// ==============================
+// 攻撃回数
+// ==============================
+
+function calculateHit(cat, enemyHp) {
+
+    const damage = calculateDamage(cat);
+
+    return Math.ceil(enemyHp / damage);
 }
-function calculateTime(hit, frequency){
+
+
+// ==============================
+// 撃破時間
+// ==============================
+
+function calculateTime(hit, frequency) {
 
     return hit * frequency;
-
 }
 
-// 耐久計算
-function calculateSurvive(cat, enemyAtk){
+
+// ==============================
+// 耐久
+// ==============================
+
+function calculateSurvive(cat, enemyAtk) {
 
     const hit = Math.floor(cat.hp / enemyAtk);
 
-    if(hit < 1){
+    if (hit < 1) {
         return 1;
     }
 
     return hit;
-
 }
 
 
-// ボタン取得
+// ==============================
+// 計算ボタン
+// ==============================
+
 const button = document.getElementById("calc");
 
+button.addEventListener("click", function () {
 
-// ボタンを押した時
-button.addEventListener("click", function(){
-
+    // 選択したキャラ
     const catChoice =
-    document.getElementById("myCat").value;
+        document.getElementById("myCat").value;
 
-const jdbCat = getCatData(catChoice);
-console.log("計算に使うJDBデータ:", jdbCat);
+    // レベル
+    const level =
+        Number(
+            document.getElementById("level").value
+        );
 
+    // 選択した敵
     const enemyChoice =
-    document.getElementById("enemy").value;
-const level =
-Number(
-    document.getElementById("level").value
-);
-    // ← この辺に追加！
+        document.getElementById("enemy").value;
+
+    // 敵倍率
     const multiplier =
-    Number(
-        document.getElementById("enemyMultiplier").value
-    );
-
-    const baseCat = cats[catChoice];
-
-const status =
-getStatus(baseCat, level);
+        Number(
+            document.getElementById("enemyMultiplier").value
+        );
 
 
-const myCat = {
-    ...baseCat,
-    hp: status.hp,
-    atk: status.atk
-};
-getCatData(myCat.name);
-    const enemy = enemies[enemyChoice];
+    // ==========================
+    // JDBからキャラ取得
+    // ==========================
 
-    // ここから倍率計算
-    const enemyHp = enemy.hp * multiplier / 100;
-    const enemyAtk = enemy.atk * multiplier / 100;
+    const jdbCat = getCatData(catChoice);
+
+    if (!jdbCat) {
+
+        document.getElementById("result").textContent =
+            "キャラデータが見つかりません";
+
+        return;
+    }
+
+    console.log("計算に使うJDBデータ:", jdbCat);
+
+
+    // ==========================
+    // JDBデータからキャラ作成
+    // ==========================
+
+    const myCat =
+        createCatFromJDB(jdbCat, level);
+
+    console.log("計算用キャラ:", myCat);
+
+
+    // ==========================
+    // 敵取得
+    // ==========================
+
+    const enemy =
+        enemies[enemyChoice];
+
+
+    // ==========================
+    // 敵倍率
+    // ==========================
+
+    const enemyHp =
+        enemy.hp * multiplier / 100;
+
+    const enemyAtk =
+        enemy.atk * multiplier / 100;
+
+
+    // ==========================
+    // 計算
+    // ==========================
 
     const damage =
-calculateDamage(myCat);
+        calculateDamage(myCat);
 
-const hit =
-Math.ceil(enemyHp / damage);
-    const survive = calculateSurvive(myCat, enemyAtk);
+    const hit =
+        Math.ceil(enemyHp / damage);
+
+    const survive =
+        calculateSurvive(myCat, enemyAtk);
+
     const time =
-calculateTime(hit, myCat.attackFrequency);
+        calculateTime(
+            hit,
+            myCat.attackFrequency
+        );
+
+
+    // ==========================
+    // 結果表示
+    // ==========================
+
     document.getElementById("result").textContent =
 
-    myCat.name + "は" +
-    enemy.name + "を" +
-    hit + "発で倒せます！ " +
-    "敵の攻撃は" +
-    survive + "発耐えます！ " +
-    "撃破時間は約" +
-    Math.round(time) +
-    "秒です！";});
-function getStatus(cat, level){
+        myCat.name + "は" +
+        enemy.name + "を" +
+        hit + "発で倒せます！ " +
 
-    const hp =
-    cat.hp * level / 30;
+        "敵の攻撃は" +
+        survive + "発耐えます！ " +
 
-    const atk =
-    cat.atk * level / 30;
+        "撃破時間は約" +
+        Math.round(time) +
+        "秒です！";
+});
 
 
-    return {
-        hp: hp,
-        atk: atk
-    };
+// ==============================
+// JDBからキャラ一覧を作る
+// ==============================
 
-}
 function loadCatList() {
 
-    const select = document.getElementById("myCat");
+    const select =
+        document.getElementById("myCat");
 
     select.innerHTML = "";
 
     for (const unit of unit_data1_ja) {
 
-        const form = unit.forms.find(f => f.valid);
+        const form =
+            unit.forms.find(f => f.valid);
 
         if (!form) continue;
 
-        const option = document.createElement("option");
+        const option =
+            document.createElement("option");
 
-        option.value = form.name;
-        option.textContent = form.name;
+        option.value =
+            form.name;
+
+        option.textContent =
+            form.name;
 
         select.appendChild(option);
     }
