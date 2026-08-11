@@ -35,27 +35,14 @@ function createCatFromJDB(jdbCat, level) {
         return null;
     }
 
-    // JDBの生データ
-    const data = jdbCat.data;
-
-    // 今は確認できている値を使用
-    const hpBase = data[0];
-    const atkBase = data[3];
-    const range = data[5];
-
-    // レベルによる仮計算
-    const hp = hpBase * level / 30;
-    const atk = atkBase * level / 30;
+    const status = getCatStatus(jdbCat.name, level);
 
     return {
         name: jdbCat.name,
-        hp: hp,
-        atk: atk,
-        range: range,
-        freq: jdbCat.freq,
-
-        // 今は既存計算との互換用
-        attackFrequency: jdbCat.freq / 42,
+        hp: status.hp,
+        atk: status.attack,
+        range: status.range,
+        attackFrequency: status.freq / 30,
         traits: {}
     };
 }
