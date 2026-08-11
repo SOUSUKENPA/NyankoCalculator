@@ -22,17 +22,21 @@ function getCatData(name) {
 
     return null;
 }
-function getCatStatus(name) {
+function getCatStatus(name, level) {
+
     const form = getCatData(name);
 
     if (!form) {
         return null;
     }
 
+    const hp = form.data[0] * 17;
+    const attack = form.data[3] * 17;
+
     return {
         name: form.name,
-        hpBase: form.data[0],
-        attackBase: form.data[3],
+        hp: hp,
+        attack: attack,
         range: form.data[5],
         freq: form.freq
     };
