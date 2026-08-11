@@ -30,8 +30,8 @@ function getCatStatus(name, level) {
         return null;
     }
 
-    const hp = form.data[0] * 17;
-    const attack = form.data[3] * 17;
+    const hp = form.data[0];
+const attack = form.data[3];
 
     return {
         name: form.name,
