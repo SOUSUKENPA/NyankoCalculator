@@ -23,15 +23,15 @@ function getCatData(name) {
     return null;
 }
 function getCatStatus(name, level) {
-
     const form = getCatData(name);
 
     if (!form) {
         return null;
     }
 
-    const hp = form.data[0];
-const attack = form.data[3];
+    // 現在はLv30用
+    const hp = form.data[0] * 17;
+    const attack = form.data[3] * 17;
 
     return {
         name: form.name,
