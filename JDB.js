@@ -29,7 +29,7 @@ function getCatStatus(name, level) {
         return null;
     }
 
-    // 現在はLv30用
+    // とりあえず現在はLv30を基準にする
     const hp = form.data[0] * 17;
     const attack = form.data[3] * 17;
 
